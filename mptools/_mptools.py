@@ -6,6 +6,7 @@ import functools
 import logging
 import multiprocessing as mp
 import multiprocessing.queues as mpq
+import os
 import signal
 import sys
 import time
@@ -107,7 +108,8 @@ def default_signal_handler(signal_object, exception_class, signal_num, current_s
 def init_signal(signal_num, signal_object, exception_class, handler):
     handler = functools.partial(handler, signal_object, exception_class)
     signal.signal(signal_num, handler)
-    signal.siginterrupt(signal_num, False)
+    if os.name == 'posix':
+        signal.siginterrupt(signal_num, False)
 
 
 def init_signals(shutdown_event, int_handler, term_handler):
