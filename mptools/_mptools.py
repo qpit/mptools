@@ -125,6 +125,7 @@ class ProcWorker:
     term_handler = staticmethod(default_signal_handler)
 
     def __init__(self, name, startup_event, shutdown_event, event_q, *args):
+        self.start_time = start_time
         self.name = name
         self.log = functools.partial(_logger, f'{self.name} Worker')
         self.startup_event = startup_event
