@@ -226,7 +226,7 @@ def proc_worker_wrapper(proc_worker_class, name, startup_evt, shutdown_evt, even
 
 
 class Proc:
-    STARTUP_WAIT_SECS = 3.0
+    STARTUP_WAIT_SECS = 10.0
     SHUTDOWN_WAIT_SECS = 3.0
 
     def __init__(self, name, worker_class, shutdown_event, event_q, *args):
@@ -238,11 +238,11 @@ class Proc:
                                args=(worker_class, name, self.startup_event, shutdown_event, event_q, *args))
         self.log(logging.DEBUG, f"Proc.__init__ starting : {name}")
         self.proc.start()
-        started = self.startup_event.wait(timeout=Proc.STARTUP_WAIT_SECS)
+        started = self.startup_event.wait(timeout=self.STARTUP_WAIT_SECS)
         self.log(logging.DEBUG, f"Proc.__init__ starting : {name} got {started}")
         if not started:
             self.terminate()
-            raise RuntimeError(f"Process {name} failed to startup after {Proc.STARTUP_WAIT_SECS} seconds")
+            raise RuntimeError(f"Process {name} failed to startup after {self.STARTUP_WAIT_SECS} seconds")
 
     def full_stop(self, wait_time=SHUTDOWN_WAIT_SECS):
         self.log(logging.DEBUG, f"Proc.full_stop stoping : {self.name}")
